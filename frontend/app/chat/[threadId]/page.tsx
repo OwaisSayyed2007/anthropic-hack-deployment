@@ -284,7 +284,7 @@ export default function ChatThread({ params }: { params: Promise<{ threadId: str
 
     let activeThreadId = threadId;
 
-    // Handle initial thread creation
+    // Handle initial thread creation - forcing fresh build
     if (threadId === "new") {
       try {
         const newThread = await api.post("/chat/threads", { title: content.slice(0, 30) });
