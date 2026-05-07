@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+ENV/
+.git/
+.gitignore
+backend_stdout.log
+backend_stderr.log
+fiwb.db
+app.db
