@@ -11,13 +11,13 @@ export default function ProfessorAnalytics() {
 
   useEffect(() => {
     api.get("/professor/analytics/overview")
-      .then(setData)
+      .then((res) => setData(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
   const openReport = (id: number) => {
-    api.get(`/professor/viva/results/${id}`).then(setSelectedResult).catch(console.error);
+    api.get(`/professor/viva/results/${id}`).then((res) => setSelectedResult(res.data)).catch(console.error);
   };
 
   if (loading) return <div style={{ padding: 40 }}>Analyzing institutional performance...</div>;

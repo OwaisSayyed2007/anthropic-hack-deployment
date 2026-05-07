@@ -102,7 +102,9 @@ export default function CoursePage({ params }: { params: Promise<{ courseId: str
     Promise.all([
       api.get(`/profile/courses/${courseId}`),
       api.get(`/profile/courses/${courseId}/materials`)
-    ]).then(([c, m]) => {
+    ]).then(([cRes, mRes]) => {
+      const c = cRes.data;
+      const m = mRes.data;
       if (c && !c.error) {
         setCourse(c);
         const classroomMats: Material[] = Array.isArray(m)

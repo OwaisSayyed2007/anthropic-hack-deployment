@@ -24,9 +24,9 @@ export default function ProfessorDashboard() {
   const fetchCourses = async () => {
     try {
       const res = await api.get("/professor/courses");
-      setCourses(res);
-      if (res.length > 0 && !selectedCourse) {
-        fetchCourseDetails(res[0].id);
+      setCourses(res.data);
+      if (res.data.length > 0 && !selectedCourse) {
+        fetchCourseDetails(res.data[0].id);
       }
     } catch (err) {
       console.error("Failed to fetch courses", err);
@@ -38,16 +38,16 @@ export default function ProfessorDashboard() {
   const fetchCourseDetails = async (courseId: number) => {
     setSelectedCourse(courseId);
     try {
-      const history = await api.get(`/professor/courses/${courseId}/analytics/history`);
-      setCourseHistory(history);
-      const graph = await api.get(`/professor/courses/${courseId}/mastery-graph`);
-      setCourseGraph(graph);
+      const historyRes = await api.get(`/professor/courses/${courseId}/analytics/history`);
+      setCourseHistory(historyRes.data);
+      const graphRes = await api.get(`/professor/courses/${courseId}/mastery-graph`);
+      setCourseGraph(graphRes.data);
       // Fetch assessments for this course
       const assessmentsRes = await api.get(`/professor/assessments`);
-      setAssessments(assessmentsRes.filter((a: any) => a.course_id === courseId));
+      setAssessments(assessmentsRes.data.filter((a: any) => a.course_id === courseId));
       // Fetch materials
-      const mats = await api.get(`/professor/courses/${courseId}/materials`);
-      setMaterials(mats);
+      const matsRes = await api.get(`/professor/courses/${courseId}/materials`);
+      setMaterials(matsRes.data);
     } catch (err) {
       console.error("Failed to fetch course details", err);
     }
@@ -55,9 +55,9 @@ export default function ProfessorDashboard() {
 
   useEffect(() => {
     fetchCourses();
-    api.get("/professor/analytics/overview").then(setStats).catch(() => {});
-    api.get("/professor/alerts").then(setAlerts).catch(() => {});
-    api.get("/professor/insights").then(res => setInsight(res.insight)).catch(() => {});
+    api.get("/professor/analytics/overview").then(res => setStats(res.data)).catch(() => {});
+    api.get("/professor/alerts").then(res => setAlerts(res.data)).catch(() => {});
+    api.get("/professor/insights").then(res => setInsight(res.data.insight)).catch(() => {});
   }, []);
 
   const handleUpload = async (e: React.FormEvent) => {

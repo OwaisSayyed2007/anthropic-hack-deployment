@@ -162,7 +162,7 @@ export default function MindMapPanel({ onChatInject }: { onChatInject: (text: st
     if (!isOpen || !docId) return;
     setLoading(true);
     api.post(`/mindmap/${docId}`)
-      .then((res) => setData(res.data, res.generated_at, res.can_undo))
+      .then((res) => setData(res.data.data, res.data.generated_at, res.data.can_undo))
       .catch(() => setLoading(false));
   }, [isOpen, docId]);
 
@@ -190,7 +190,7 @@ export default function MindMapPanel({ onChatInject }: { onChatInject: (text: st
     setLoading(true);
     try {
       const res = await api.get(`/mindmap/${docId}?force=true`);
-      setData(res.data, res.generated_at, res.can_undo);
+      setData(res.data.data, res.data.generated_at, res.data.can_undo);
     } finally {
       setLoading(false);
     }
@@ -201,7 +201,7 @@ export default function MindMapPanel({ onChatInject }: { onChatInject: (text: st
     setLoading(true);
     try {
       const res = await api.post(`/mindmap/${docId}/undo`);
-      setData(res.data, res.generated_at, res.can_undo);
+      setData(res.data.data, res.data.generated_at, res.data.can_undo);
     } finally {
       setLoading(false);
     }
@@ -216,7 +216,7 @@ export default function MindMapPanel({ onChatInject }: { onChatInject: (text: st
     setLoading(true);
     try {
       const res = await api.patch(`/mindmap/${docId}/edit`, { instruction: cmd });
-      setData(res.data, res.generated_at, res.can_undo);
+      setData(res.data.data, res.data.generated_at, res.data.can_undo);
     } catch (err) {
       console.error("Edit failed:", err);
     } finally {

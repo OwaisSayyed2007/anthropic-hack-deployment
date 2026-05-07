@@ -57,7 +57,7 @@ export default function DocumentViewer() {
       
       // 1. Get signed token
       const resToken = await api.get(`/profile/proxy/drive/${materialId}/token`);
-      const token = resToken?.token;
+      const token = resToken?.data?.token;
       if (!token) throw new Error("Backend returned no access token.");
 
       // 2. For 'view' mode, we construct the direct binary URL manually
@@ -69,10 +69,11 @@ export default function DocumentViewer() {
 
       // 3. Resolve 'preview' URL via proxy (returns JSON {url, material_id, type})
       const resUrl = await api.get(`/profile/proxy/drive/${materialId}/preview?token=${encodeURIComponent(token)}`);
+      const data = resUrl?.data;
       
-      if (resUrl?.url) {
-        console.log(`[DocumentViewer] Resolved (${resUrl.type || "drive"}): ${resUrl.url.substring(0, 60)}...`);
-        return { url: resUrl.url, type: resUrl.type || "drive" };
+      if (data?.url) {
+        console.log(`[DocumentViewer] Resolved (${data.type || "drive"}): ${data.url.substring(0, 60)}...`);
+        return { url: data.url, type: data.type || "drive" };
       }
 
       throw new Error("Backend did not return a valid URL.");

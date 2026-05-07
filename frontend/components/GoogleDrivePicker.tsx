@@ -30,7 +30,7 @@ export default function GoogleDrivePicker({ onFilesSelected, triggerElement }: G
   // 1. Fetch config from backend
   useEffect(() => {
     api.get("/integrations/drive/config")
-      .then(setConfig)
+      .then((res) => setConfig(res.data))
       .catch((err) => console.error("Failed to load Drive config:", err));
   }, []);
 

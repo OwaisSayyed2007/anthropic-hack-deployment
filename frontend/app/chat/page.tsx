@@ -160,7 +160,7 @@ export default function ChatHome() {
                 const id = prompt("Enter Course ID to join:");
                 if (id) {
                   api.post(`/professor/courses/${id}/enroll`)
-                    .then(() => alert("Successfully joined course!"))
+                    .then((res) => alert("Successfully joined course!"))
                     .catch(() => alert("Failed to join course. Check the ID."));
                 }
               }} 

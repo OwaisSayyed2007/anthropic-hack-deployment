@@ -18,8 +18,8 @@ export default function ProfessorCourses() {
     if (!newCourseName.trim()) return;
     try {
       const res = await api.post("/professor/courses", { name: newCourseName });
-      setCourses([...courses, res]);
-      setSelectedCourse(res);
+      setCourses([...courses, res.data]);
+      setSelectedCourse(res.data);
       setModalType(null);
       setNewCourseName("");
     } catch (err) {
@@ -28,7 +28,8 @@ export default function ProfessorCourses() {
   };
 
   useEffect(() => {
-    api.get("/professor/courses").then((data) => {
+    api.get("/professor/courses").then((res) => {
+      const data = res.data;
       setCourses(data);
       if (data.length > 0) setSelectedCourse(data[0]);
     }).catch(() => {});
@@ -36,7 +37,7 @@ export default function ProfessorCourses() {
 
   useEffect(() => {
     if (selectedCourse) {
-      api.get(`/professor/courses/${selectedCourse.id}/materials`).then(setMaterials).catch(() => {});
+      api.get(`/professor/courses/${selectedCourse.id}/materials`).then(res => setMaterials(res.data)).catch(() => {});
     }
   }, [selectedCourse]);
 
@@ -45,7 +46,7 @@ export default function ProfessorCourses() {
     try {
       const res = await api.post("/professor/generate-questions", { material_id: mat.id });
       setModalType("quiz");
-      setModalData({ questions: res.questions, mat_id: mat.id });
+      setModalData({ questions: res.data.questions, mat_id: mat.id });
     } catch (err) {
       console.error("Quiz gen failed", err);
     } finally {
@@ -58,7 +59,7 @@ export default function ProfessorCourses() {
     try {
       const res = await api.get(`/professor/materials/${mat.id}/heatmap`);
       setModalType("heatmap");
-      setModalData({ mat, heatmap: res });
+      setModalData({ mat, heatmap: res.data });
     } catch (err) {
       console.error("Heatmap failed", err);
     } finally {
@@ -99,7 +100,7 @@ export default function ProfessorCourses() {
     try {
       await api.post("/professor/upload", formData);
       // Refresh materials
-      api.get(`/professor/courses/${selectedCourse.id}/materials`).then(setMaterials);
+      api.get(`/professor/courses/${selectedCourse.id}/materials`).then(res => setMaterials(res.data));
     } catch (err) {
       console.error("Upload failed", err);
     } finally {
@@ -113,7 +114,7 @@ export default function ProfessorCourses() {
     try {
       await api.post("/professor/upload/youtube", { url: ytLink, course_id: selectedCourse.id });
       setYtLink("");
-      api.get(`/professor/courses/${selectedCourse.id}/materials`).then(setMaterials);
+      api.get(`/professor/courses/${selectedCourse.id}/materials`).then(res => setMaterials(res.data));
     } catch (err) {
       console.error("YT sync failed", err);
     } finally {

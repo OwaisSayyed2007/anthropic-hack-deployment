@@ -13,11 +13,11 @@ export default function CourseDetail({ params }: { params: Promise<{ courseId: s
 
   useEffect(() => {
     api.get(`/profile/courses/${courseId}`)
-      .then(setCourse)
+      .then((res) => setCourse(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));
 
-    api.get(`/chat/assignments?course_id=${courseId}`).then(setAssignments).catch(() => {});
+    api.get(`/chat/assignments?course_id=${courseId}`).then((res) => setAssignments(res.data)).catch(() => {});
   }, [courseId]);
 
   if (loading) return <div style={{ padding: 40 }}>Loading curriculum...</div>;
@@ -118,7 +118,8 @@ export default function CourseDetail({ params }: { params: Promise<{ courseId: s
                     </div>
                     <button 
                       onClick={async () => {
-                        const { thread_id } = await api.post(`/chat/assignments/${a.id}/start`);
+                        const res = await api.post(`/chat/assignments/${a.id}/start`);
+                        const { thread_id } = res.data;
                         window.location.href = `/chat/${thread_id}`;
                       }}
                       className="btn-primary" 

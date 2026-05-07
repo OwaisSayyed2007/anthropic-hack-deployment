@@ -20,7 +20,7 @@ export default function Onboarding() {
     }
     // Refresh user profile to ensure we have the latest finalized status
     api.get("/auth/me")
-      .then(setUser)
+      .then((res) => setUser(res.data))
       .catch(() => logout());
   }, [token, router, setUser, logout]);
 
@@ -31,10 +31,11 @@ export default function Onboarding() {
 
     try {
       const res = await api.post("/auth/finalize-role", { role, password });
+      const data = res.data;
       if (user) {
-        setUser({ ...user, role: res.role, role_finalized: true });
+        setUser({ ...user, role: data.role, role_finalized: true });
       }
-      if (res.role === "professor") {
+      if (data.role === "professor") {
         router.push("/professor");
       } else {
         router.push("/chat");

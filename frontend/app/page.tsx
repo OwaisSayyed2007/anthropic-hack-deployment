@@ -18,10 +18,11 @@ function LoginInner() {
     setError("");
     try {
       const res = await api.post("/auth/login", { username, password });
-      setToken(res.token);
-      setUser(res.user);
+      setToken(res.data.token);
+      setUser(res.data.user);
       
-      const me = await api.get("/auth/me");
+      const meRes = await api.get("/auth/me");
+      const me = meRes.data;
       setUser(me);
       if (me.role === "professor") router.push("/professor");
       else router.push("/chat");
@@ -117,7 +118,8 @@ export default function RootPage() {
     if (token) {
       if (!user) {
         api.get("/auth/me")
-          .then((u) => {
+          .then((res) => {
+            const u = res.data;
             useAuthStore.getState().setUser(u);
             if (u.role === "professor") router.replace("/professor");
             else router.replace("/chat");
@@ -131,7 +133,8 @@ export default function RootPage() {
       }
     } else {
       api.get("/auth/config")
-        .then((cfg) => {
+        .then((res) => {
+          const cfg = res.data;
           if (cfg?.method === "simple") setSimpleMode(true);
           else setConfigError("Invalid authentication configuration.");
         })
