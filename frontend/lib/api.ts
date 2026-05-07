@@ -1,4 +1,10 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
+ 
+declare module "axios" {
+  export interface AxiosInstance {
+    stream: (url: string, data: any) => Promise<Response>;
+  }
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8002";
 
