@@ -75,14 +75,19 @@ frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        frontend_url, 
+        frontend_url,
+        # Local development
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8888",
         "http://127.0.0.1:8888",
         "http://localhost:3001",
         "http://localhost:3002",
-        "http://127.0.0.1:3002"
+        "http://127.0.0.1:3002",
+        # Vercel production & preview deployments
+        "https://anthropic-hack-deployment.vercel.app",
+        "https://anthropic-hack-deployment-git-main-owaissayyed2007s-projects.vercel.app",
+        "https://anthropic-hack-deployment-efjbedkj7-owaissayyed2007s-projects.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
