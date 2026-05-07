@@ -20,4 +20,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// standard response handling
+
+// Add a custom stream helper since Axios doesn't handle browser streams natively
+(api as any).stream = async (url: string, data: any) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("auth-token") : null;
+  const response = await fetch(`${API_URL}${url}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+  return response;
+};
