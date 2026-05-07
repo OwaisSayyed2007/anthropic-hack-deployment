@@ -13,7 +13,7 @@ export default function StudentAssignments() {
   const router = useRouter();
 
   const fetchAssignments = () => {
-    api.get("/chat/assignments").then(setAssignments).catch(() => {});
+    api.get("/chat/assignments").then((res) => setAssignments(res.data)).catch(() => {});
   };
 
   useEffect(() => {
@@ -22,7 +22,8 @@ export default function StudentAssignments() {
 
   const startViva = async (id: number) => {
     try {
-      const { thread_id } = await api.post(`/chat/assignments/${id}/start`);
+      const res = await api.post(`/chat/assignments/${id}/start`);
+      const { thread_id } = res.data;
       router.push(`/chat/${thread_id}`);
     } catch (err) {
       console.error("Failed to start viva", err);
@@ -32,8 +33,8 @@ export default function StudentAssignments() {
   const viewReport = async (id: number) => {
     setLoadingReport(true);
     try {
-      const report = await api.get(`/chat/assignments/${id}/report`);
-      setSelectedReport(report);
+      const res = await api.get(`/chat/assignments/${id}/report`);
+      setSelectedReport(res.data);
     } catch (err) {
       console.error("Failed to load report", err);
       alert("Report not ready yet. Please wait for AI analysis to complete.");

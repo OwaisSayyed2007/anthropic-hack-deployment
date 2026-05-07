@@ -15,15 +15,16 @@ export default function StudentProgress() {
   const [overall, setOverall] = useState({ mastery: 0, percentile: 50, velocity: "+0%" });
 
   useEffect(() => {
-    api.get("/profile/mastery").then(setMastery).catch(() => {});
-    api.get("/profile/mastery/history").then((data) => {
+    api.get("/profile/mastery").then((res) => setMastery(res.data)).catch(() => {});
+    api.get("/profile/mastery/history").then((res) => {
+      const data = res.data;
       if (!Array.isArray(data)) return;
       // Add a static target line to the history data
       const formatted = data.map((d: any) => ({ ...d, target: 80 }));
       setHistory(formatted);
     }).catch(() => {});
-    api.get("/profile/mastery-graph").then(setGraphData).catch(() => {});
-    api.get("/profile/stats").then(setOverall).catch(() => {});
+    api.get("/profile/mastery-graph").then((res) => setGraphData(res.data)).catch(() => {});
+    api.get("/profile/stats").then((res) => setOverall(res.data)).catch(() => {});
   }, []);
 
   const getStatus = (score: number) => {

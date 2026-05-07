@@ -13,9 +13,9 @@ export default function MyCourses() {
     setLoading(true);
     try {
       const e = await api.get("/profile/courses");
-      setEnrolled(e);
+      setEnrolled(e.data);
       const a = await api.get("/profile/courses/discover");
-      setAvailable(a);
+      setAvailable(a.data);
     } catch (err) {
       console.error("Failed to fetch courses", err);
     } finally {
