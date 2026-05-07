@@ -288,7 +288,7 @@ export default function ChatThread({ params }: { params: Promise<{ threadId: str
     if (threadId === "new") {
       try {
         const newThread = await api.post("/chat/threads", { title: content.slice(0, 30) });
-        activeThreadId = newThread.data.id.toString();
+        activeThreadId = (newThread as any).data.id.toString();
         // Force URL update to anchor the history before sending the message payload
         router.push(`/chat/${activeThreadId}`, { scroll: false });
       } catch (err) {
